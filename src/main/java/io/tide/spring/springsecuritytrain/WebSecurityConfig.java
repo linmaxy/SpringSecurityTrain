@@ -1,10 +1,15 @@
 package io.tide.spring.springsecuritytrain;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +41,7 @@ HttpServletRequest.html#logout()
 		http.authorizeRequests()
 			.antMatchers("/", "/home").permitAll()
 			.antMatchers("/admin").hasRole("ADMIN")
+			.antMatchers("/user/*").hasRole("ADMIN")
 			.and().formLogin().loginPage("/login").permitAll()
 			.and().logout().permitAll();
 	}
@@ -46,8 +52,23 @@ HttpServletRequest.html#logout()
 			.withUser("admin").password("admin").roles("ADMIN")
 			.and()
 			.withUser("max").password("max").roles("USER");
+		
+		
 	}
 	
+	
+	/*
+	@Bean
+	@Override
+	protected UserDetailsService userDetailsService() {
+		UserDetails users = User.withDefaultPasswordEncoder()
+				.username("linux")
+				.password("123")
+				.roles("ADMIN").build();
+		
+		return new InMemoryUserDetailsManager(users);
+	}
+	*/
 
 
 }
